@@ -50,11 +50,16 @@ function updateLab() {
   const labelMap = { opaque: "不透明積木", translucent: "半透明色片", clear: "透明片" };
   const toneMap = { opaque: "顏色很深", translucent: "顏色變淡", clear: "幾乎看不見" };
 
+  const scaleX = Math.max(0.5, shadowWidth / 30);
+  const scaleY = Math.max(0.5, shadowHeight / 105);
+  const skew = (lightY - 244) * 0.05;
+
   dynamicLight.setAttribute("transform", `translate(${lightShift} ${lightY - 244})`);
   dynamicObject.setAttribute("transform", `translate(${objectX - 388} 0)`);
-  dynamicShadow.setAttribute("rx", Math.max(16, shadowWidth).toFixed(1));
-  dynamicShadow.setAttribute("ry", Math.max(28, shadowHeight).toFixed(1));
-  dynamicShadow.setAttribute("cy", shadowY.toFixed(1));
+  dynamicShadow.setAttribute(
+    "transform",
+    `translate(696 ${shadowY.toFixed(1)}) scale(${scaleX.toFixed(3)} ${scaleY.toFixed(3)}) skewX(${skew.toFixed(2)})`
+  );
   dynamicShadow.style.fill = `rgba(23, 33, 43, ${opacityMap[material]})`;
   dynamicBeam.setAttribute("points", `${128 + lightShift},${lightY + 6} 660,118 660,360`);
   lightLabel.setAttribute("x", String(58 + lightShift));

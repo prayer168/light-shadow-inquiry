@@ -611,6 +611,28 @@ output {
 .teacher-note h3 { margin: 0 0 8px; }
 .teacher-note p { margin: 0; color: var(--muted); line-height: 1.75; }
 
+.site-footer {
+  border-top: 1px solid var(--line);
+  background: var(--panel);
+  padding: 22px clamp(16px, 4vw, 42px);
+  text-align: center;
+}
+
+.site-footer p {
+  margin: 6px 0;
+  color: var(--muted);
+  font-size: .92rem;
+  line-height: 1.7;
+}
+
+.site-footer a {
+  color: var(--blue);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.site-footer a:hover { text-decoration: underline; }
+
 @media (max-width: 920px) {
   .hero,
   .lab-layout,
