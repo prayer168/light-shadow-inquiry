@@ -11,6 +11,7 @@ tabTriggers.forEach((trigger) => {
 });
 
 const heightControl = document.querySelector("#heightControl");
+const lightDistanceControl = document.querySelector("#lightDistanceControl");
 const distanceControl = document.querySelector("#distanceControl");
 const materialControls = document.querySelectorAll("input[name='material']");
 const dynamicLight = document.querySelector("#dynamicLight");
@@ -20,7 +21,9 @@ const dynamicBeam = document.querySelector("#dynamicBeam");
 const objectLabel = document.querySelector("#objectLabel");
 const labReadout = document.querySelector("#labReadout");
 const heightValue = document.querySelector("#heightValue");
+const lightDistanceValue = document.querySelector("#lightDistanceValue");
 const distanceValue = document.querySelector("#distanceValue");
+const lightLabel = document.querySelector("#lightLabel");
 
 function currentMaterial() {
   return [...materialControls].find((control) => control.checked).value;
@@ -35,31 +38,35 @@ function bump(el) {
 
 function updateLab() {
   const lightY = Number(heightControl.value);
+  const lightShift = Number(lightDistanceControl.value);
   const objectX = Number(distanceControl.value);
   const material = currentMaterial();
-  const screenX = 696;
+  const proximity = lightShift / 170;
   const distanceRatio = (500 - objectX) / 240;
-  const shadowWidth = 30 + distanceRatio * 58;
-  const shadowHeight = 68 + distanceRatio * 120 + Math.abs(lightY - 244) * .32;
+  const shadowWidth = 30 + distanceRatio * 48 + proximity * 26;
+  const shadowHeight = 68 + distanceRatio * 108 + proximity * 46 + Math.abs(lightY - 244) * .32;
   const shadowY = 246 + (244 - lightY) * .42;
   const opacityMap = { opaque: .68, translucent: .34, clear: .12 };
   const labelMap = { opaque: "不透明積木", translucent: "半透明色片", clear: "透明片" };
   const toneMap = { opaque: "顏色很深", translucent: "顏色變淡", clear: "幾乎看不見" };
 
-  dynamicLight.setAttribute("transform", `translate(0 ${lightY - 244})`);
+  dynamicLight.setAttribute("transform", `translate(${lightShift} ${lightY - 244})`);
   dynamicObject.setAttribute("transform", `translate(${objectX - 388} 0)`);
   dynamicShadow.setAttribute("rx", Math.max(16, shadowWidth).toFixed(1));
   dynamicShadow.setAttribute("ry", Math.max(28, shadowHeight).toFixed(1));
   dynamicShadow.setAttribute("cy", shadowY.toFixed(1));
   dynamicShadow.style.fill = `rgba(23, 33, 43, ${opacityMap[material]})`;
-  dynamicBeam.setAttribute("points", `128,${lightY + 6} 660,118 660,360`);
+  dynamicBeam.setAttribute("points", `${128 + lightShift},${lightY + 6} 660,118 660,360`);
+  lightLabel.setAttribute("x", String(58 + lightShift));
   objectLabel.textContent = labelMap[material];
 
-  const sizeText = shadowWidth > 64 ? "影子變大" : shadowWidth < 42 ? "影子變小" : "影子中等大小";
+  const sizeText = shadowWidth > 70 ? "影子變大" : shadowWidth < 44 ? "影子變小" : "影子中等大小";
   const angleText = lightY < 165 ? "光源較高，影子位置往下移" : lightY > 285 ? "光源較低，影子被拉長並往上移" : "光源高度接近中間";
-  labReadout.textContent = `${sizeText}，${toneMap[material]}。${angleText}。這次請只改變一個變因，才能公平比較。`;
+  const nearText = proximity > .66 ? "光源靠近物體，影子變大" : proximity < .2 ? "光源遠離物體，影子較小" : "光源與物體距離適中";
+  labReadout.textContent = `${sizeText}，${toneMap[material]}。${angleText}；${nearText}。這次請只改變一個變因，才能公平比較。`;
 
   heightValue.textContent = lightY < 165 ? "高" : lightY > 285 ? "低" : "中";
+  lightDistanceValue.textContent = proximity > .66 ? "近" : proximity < .2 ? "遠" : "中";
   distanceValue.textContent = objectX < 320 ? "近" : objectX > 440 ? "遠" : "中";
 }
 
@@ -70,6 +77,7 @@ function flashOutput() {
 }
 
 heightControl.addEventListener("input", () => { updateLab(); bump(heightValue); flashOutput(); });
+lightDistanceControl.addEventListener("input", () => { updateLab(); bump(lightDistanceValue); flashOutput(); });
 distanceControl.addEventListener("input", () => { updateLab(); bump(distanceValue); flashOutput(); });
 materialControls.forEach((control) => {
   control.addEventListener("input", () => { updateLab(); flashOutput(); });

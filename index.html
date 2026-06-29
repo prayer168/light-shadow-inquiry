@@ -156,7 +156,7 @@
               <rect x="360" y="210" width="56" height="118" rx="14"/>
               <circle cx="388" cy="188" r="34"/>
             </g>
-            <text x="58" y="440">手電筒</text>
+            <text id="lightLabel" x="58" y="440">手電筒</text>
             <text id="objectLabel" x="344" y="440">不透明積木</text>
             <text x="642" y="440">白色螢幕</text>
           </svg>
@@ -165,6 +165,10 @@
           <label>
             <span class="control-label">光源高度 <em id="heightValue" class="control-value">中</em></span>
             <input id="heightControl" type="range" min="80" max="320" value="244">
+          </label>
+          <label>
+            <span class="control-label">光源遠近 <em id="lightDistanceValue" class="control-value">遠</em></span>
+            <input id="lightDistanceControl" type="range" min="0" max="170" value="0">
           </label>
           <label>
             <span class="control-label">物體離光源距離 <em id="distanceValue" class="control-value">中</em></span>
