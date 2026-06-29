@@ -229,7 +229,7 @@ function renderQuiz() {
     const card = document.createElement("article");
     card.className = "quiz-card";
     card.innerHTML = `
-      <h3>${index + 1}. ${question.q}</h3>
+      <h3><span class="quiz-num">${index + 1}.</span>${question.q}${question.from ? `<span class="quiz-tag">${question.from}</span>` : ""}</h3>
       <div class="choice-list"></div>
       <div class="feedback" aria-live="polite"></div>
     `;
