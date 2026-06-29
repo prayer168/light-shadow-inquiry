@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>光影遊戲的探究與實作</title>
+  <meta name="description" content="國小自然科學光影探究互動教材，透過模擬、動畫、情境卡與測驗理解光源、物體與影子的關係。">
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <button class="brand tab-trigger active" type="button" data-tab="mission">光影遊戲</button>
+    <nav class="nav-links" aria-label="教材分頁">
+      <button class="tab-trigger active" type="button" data-tab="mission">任務</button>
+      <button class="tab-trigger" type="button" data-tab="explore">探索</button>
+      <button class="tab-trigger" type="button" data-tab="interact">互動</button>
+      <button class="tab-trigger" type="button" data-tab="animation">動畫</button>
+      <button class="tab-trigger" type="button" data-tab="apply">應用</button>
+      <button class="tab-trigger" type="button" data-tab="quiz">測驗</button>
+      <button class="tab-trigger" type="button" data-tab="resources">資源</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="mission" class="tab-panel active hero" aria-labelledby="mission-title">
+      <div class="hero-copy">
+        <p class="eyebrow">國小自然科學探究實作</p>
+        <h1 id="mission-title">用一束光，找出影子的規則</h1>
+        <p>你是光影實驗室的小研究員。請用手電筒、積木、紙片與白色螢幕，觀察影子的大小、方向、深淺與形狀如何改變，最後設計一個能被同學驗證的光影小遊戲。</p>
+        <div class="hero-actions">
+          <button class="button primary tab-trigger" type="button" data-tab="interact">開始調光源</button>
+          <button class="button secondary tab-trigger" type="button" data-tab="quiz">挑戰測驗</button>
+        </div>
+      </div>
+      <div class="shadow-stage hero-stage" aria-label="光影實驗示意圖">
+        <svg viewBox="0 0 760 460" role="img" aria-labelledby="hero-svg-title">
+          <title id="hero-svg-title">手電筒照向物體，在螢幕上形成影子</title>
+          <defs>
+            <linearGradient id="beamGradient" x1="0" x2="1">
+              <stop offset="0" stop-color="#ffe08a" stop-opacity=".92"/>
+              <stop offset=".72" stop-color="#f8c15d" stop-opacity=".28"/>
+              <stop offset="1" stop-color="#f8c15d" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="screenGradient" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stop-color="#fff8e7"/>
+              <stop offset="1" stop-color="#dbeff4"/>
+            </linearGradient>
+          </defs>
+          <rect class="lab-wall" x="20" y="28" width="720" height="360" rx="18"/>
+          <path class="light-beam" d="M148 230 L570 96 L570 364 Z"/>
+          <g class="flashlight">
+            <rect x="56" y="200" width="96" height="58" rx="18"/>
+            <path d="M144 202 L190 214 L190 244 L144 256 Z"/>
+            <circle cx="192" cy="229" r="22"/>
+          </g>
+          <rect class="screen" x="570" y="76" width="74" height="310" rx="8"/>
+          <ellipse class="cast-shadow" cx="606" cy="244" rx="32" ry="88"/>
+          <g class="object-shape">
+            <rect x="350" y="168" width="58" height="116" rx="14"/>
+            <circle cx="379" cy="148" r="36"/>
+          </g>
+          <line class="table-line" x1="80" y1="388" x2="676" y2="388"/>
+          <text x="78" y="428">光源</text>
+          <text x="340" y="428">物體</text>
+          <text x="560" y="428">影子</text>
+        </svg>
+      </div>
+      <aside class="mission-card">
+        <strong>觀察目標</strong>
+        <ul>
+          <li>說出影子形成需要光源、物體與承接面。</li>
+          <li>比較光源距離與影子大小的關係。</li>
+          <li>描述光照角度改變時，影子方向與長短的變化。</li>
+          <li>用證據解釋自己的光影設計。</li>
+        </ul>
+      </aside>
+    </section>
+
+    <section id="explore" class="tab-panel section" aria-labelledby="explore-title">
+      <div class="section-heading">
+        <p class="eyebrow">概念探索</p>
+        <h2 id="explore-title">光、物、影排成一條線</h2>
+        <p>影子不是物體自己長出來的黑色圖案，而是光被不透明或半透明物體擋住後，在承接面上留下的暗區。</p>
+      </div>
+      <div class="concept-grid">
+        <article>
+          <span class="icon-chip">1</span>
+          <h3>光會直線前進</h3>
+          <p>在空氣中，手電筒的光大致沿直線前進。物體擋住部分光線時，後方就會出現較暗的區域。</p>
+        </article>
+        <article>
+          <span class="icon-chip">2</span>
+          <h3>距離影響大小</h3>
+          <p>物體越靠近光源，擋住的光線範圍越大，螢幕上的影子通常越大。</p>
+        </article>
+        <article>
+          <span class="icon-chip">3</span>
+          <h3>角度影響長短</h3>
+          <p>光源位置越低，影子越容易被拉長；光源移到另一側，影子也會往相反方向移動。</p>
+        </article>
+        <article>
+          <span class="icon-chip">4</span>
+          <h3>材質影響深淺</h3>
+          <p>透明物讓大多數光通過，影子很淡；不透明物擋光多，影子較深。</p>
+        </article>
+      </div>
+      <div class="evidence-strip">
+        <div>
+          <strong>探究句型</strong>
+          <p>如果我改變＿＿，那麼影子的＿＿會改變，因為＿＿。</p>
+        </div>
+        <div>
+          <strong>記錄重點</strong>
+          <p>每次只改變一個變因，記下光源位置、物體位置、材質與影子觀察結果。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="interact" class="tab-panel section" aria-labelledby="interact-title">
+      <div class="section-heading">
+        <p class="eyebrow">互動實驗室</p>
+        <h2 id="interact-title">調整光源，觀察影子立刻改變</h2>
+      </div>
+      <div class="lab-layout">
+        <div class="sim-panel">
+          <svg id="labSvg" viewBox="0 0 820 480" role="img" aria-labelledby="lab-title lab-desc">
+            <title id="lab-title">光源、物體與影子的互動模型</title>
+            <desc id="lab-desc">滑桿會改變光源高度、物體距離與材質透明度，螢幕上的影子會同步變化。</desc>
+            <defs>
+              <linearGradient id="labBeamGradient" x1="0" x2="1">
+                <stop offset="0" stop-color="#ffe08a" stop-opacity=".92"/>
+                <stop offset=".72" stop-color="#f8c15d" stop-opacity=".28"/>
+                <stop offset="1" stop-color="#f8c15d" stop-opacity="0"/>
+              </linearGradient>
+              <linearGradient id="labScreenGradient" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0" stop-color="#fff8e7"/>
+                <stop offset="1" stop-color="#dbeff4"/>
+              </linearGradient>
+            </defs>
+            <rect class="lab-floor" x="24" y="34" width="772" height="374" rx="18"/>
+            <line class="axis-line" x1="80" y1="390" x2="740" y2="390"/>
+            <polygon id="dynamicBeam" class="lab-beam" points="128,250 660,118 660,360"/>
+            <g id="dynamicLight" class="flashlight">
+              <rect x="52" y="218" width="88" height="52" rx="16"/>
+              <path d="M132 220 L176 232 L176 256 L132 268 Z"/>
+              <circle cx="176" cy="244" r="18"/>
+            </g>
+            <rect class="screen" x="660" y="90" width="70" height="300" rx="8"/>
+            <ellipse id="dynamicShadow" class="cast-shadow" cx="696" cy="246" rx="36" ry="88"/>
+            <g id="dynamicObject" class="object-shape">
+              <rect x="360" y="210" width="56" height="118" rx="14"/>
+              <circle cx="388" cy="188" r="34"/>
+            </g>
+            <text x="58" y="440">手電筒</text>
+            <text id="objectLabel" x="344" y="440">不透明積木</text>
+            <text x="642" y="440">白色螢幕</text>
+          </svg>
+        </div>
+        <form class="control-panel" aria-label="光影模擬控制">
+          <label>
+            光源高度
+            <input id="heightControl" type="range" min="80" max="320" value="244">
+          </label>
+          <label>
+            物體離光源距離
+            <input id="distanceControl" type="range" min="260" max="500" value="380">
+          </label>
+          <fieldset>
+            <legend>物體材質</legend>
+            <label><input type="radio" name="material" value="opaque" checked> 不透明</label>
+            <label><input type="radio" name="material" value="translucent"> 半透明</label>
+            <label><input type="radio" name="material" value="clear"> 透明</label>
+          </fieldset>
+          <output id="labReadout">影子中等大小，顏色很深。請改變一個變因再比較。</output>
+        </form>
+      </div>
+    </section>
+
+    <section id="animation" class="tab-panel section" aria-labelledby="animation-title">
+      <div class="section-heading">
+        <p class="eyebrow">分段動畫</p>
+        <h2 id="animation-title">看見影子形成的順序</h2>
+      </div>
+      <div class="animation-layout">
+        <div class="shadow-stage mini-stage" id="stepStage">
+          <div class="animated-beam"></div>
+          <div class="animated-light"></div>
+          <div class="animated-object"></div>
+          <div class="animated-screen"></div>
+          <div class="animated-shadow"></div>
+        </div>
+        <div class="step-card">
+          <p id="stepCaption">第 1 步：先放好光源，確認光照向螢幕。</p>
+          <div class="step-actions">
+            <button class="button secondary" id="prevStep" type="button">上一步</button>
+            <button class="button primary" id="nextStep" type="button">下一步</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="apply" class="tab-panel section" aria-labelledby="apply-title">
+      <div class="section-heading">
+        <p class="eyebrow">情境應用</p>
+        <h2 id="apply-title">選一張卡，判斷該改變什麼</h2>
+      </div>
+      <div id="caseGrid" class="case-grid" aria-live="polite"></div>
+    </section>
+
+    <section id="quiz" class="tab-panel section" aria-labelledby="quiz-title">
+      <div class="section-heading">
+        <p class="eyebrow">形成性評量</p>
+        <h2 id="quiz-title">10 題光影挑戰</h2>
+      </div>
+      <div class="quiz-status">
+        <span id="quizScore">已答 0 / 10</span>
+        <button class="button secondary" id="resetQuiz" type="button">重新作答</button>
+      </div>
+      <div id="quizGrid" class="quiz-grid"></div>
+    </section>
+
+    <section id="resources" class="tab-panel section" aria-labelledby="resources-title">
+      <div class="section-heading">
+        <p class="eyebrow">教師資源</p>
+        <h2 id="resources-title">來源、延伸與課堂準備</h2>
+      </div>
+      <div id="resourceList" class="resource-list"></div>
+      <div class="teacher-note">
+        <h3>課堂材料建議</h3>
+        <p>手電筒或手機燈、白紙或白板、不同材質物品、透明色片、積木、捲尺、記錄單。提醒學生不要直視強光，也不要用光照同學眼睛。</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="data/content.js"></script>
+  <script src="data/quiz.js"></script>
+  <script src="data/resources.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
