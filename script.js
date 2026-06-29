@@ -154,12 +154,61 @@ updateStep();
 
 const caseGrid = document.querySelector("#caseGrid");
 
-window.lessonCases.forEach((item) => {
+const sun = (x, y) => `<circle cx="${x}" cy="${y}" r="9" fill="#f7b733"/>` +
+  `<circle cx="${x}" cy="${y}" r="13" fill="none" stroke="#f7b733" stroke-width="1.4" opacity=".55"/>`;
+const obj = (x, attrs = "") => `<rect x="${x}" y="34" width="14" height="34" rx="3" fill="#2a3340" ${attrs}/>`;
+
+// 每張情境卡的示意圖（viewBox 0 0 200 96）
+const caseArt = [
+  // 0 影子太小了：光源靠近物體，影子放大
+  `${sun(34, 28)}${obj(96)}
+   <ellipse class="case-shadow" cx="150" cy="80" rx="16" ry="6" fill="rgba(23,33,43,.4)"/>
+   <line class="ray" x1="44" y1="32" x2="96" y2="48" stroke="#f7b733" stroke-width="1.4"/>
+   <path d="M168 64 h18 m0 0 l-5 -4 m5 4 l-5 4" stroke="#1f6feb" stroke-width="1.6" fill="none"/>`,
+  // 1 影子跑到右邊：光源在左，影子在右
+  `${sun(26, 30)}${obj(96)}
+   <ellipse cx="150" cy="80" rx="20" ry="6" fill="rgba(23,33,43,.42)"/>
+   <line class="ray" x1="36" y1="34" x2="150" y2="76" stroke="#f7b733" stroke-width="1.4"/>
+   <text x="150" y="92" font-size="10" fill="#1f6feb" text-anchor="middle" font-weight="700">影子偏右</text>`,
+  // 2 影子太淡：半透明物，光部分穿過
+  `${sun(34, 28)}<rect x="96" y="34" width="14" height="34" rx="3" fill="#7fb3ff" opacity=".5"/>
+   <ellipse cx="150" cy="80" rx="16" ry="5" fill="rgba(23,33,43,.16)"/>
+   <line class="ray" x1="44" y1="30" x2="150" y2="74" stroke="#f7b733" stroke-width="1.4"/>
+   <line class="ray" x1="110" y1="50" x2="150" y2="72" stroke="#f7b733" stroke-width="1.2" opacity=".6"/>`,
+  // 3 影子變長：光源放低，影子被拉長
+  `${sun(28, 54)}${obj(96)}
+   <ellipse class="case-shadow" cx="156" cy="80" rx="30" ry="6" fill="rgba(23,33,43,.4)"/>
+   <line class="ray" x1="38" y1="54" x2="156" y2="78" stroke="#f7b733" stroke-width="1.4"/>`,
+  // 4 形狀不像原物：物體旋轉，輪廓改變
+  `${sun(34, 28)}<rect x="92" y="40" width="22" height="14" rx="3" fill="#2a3340" transform="rotate(35 103 47)"/>
+   <ellipse cx="150" cy="80" rx="20" ry="7" fill="rgba(23,33,43,.4)"/>
+   <line class="ray" x1="44" y1="32" x2="150" y2="74" stroke="#f7b733" stroke-width="1.4"/>
+   <path d="M70 22 a10 10 0 0 1 14 4" stroke="#1f6feb" stroke-width="1.6" fill="none"/>`,
+  // 5 兩個影子重疊
+  `${sun(34, 26)}${obj(88)}${obj(108)}
+   <ellipse cx="146" cy="80" rx="18" ry="6" fill="rgba(23,33,43,.34)"/>
+   <ellipse cx="160" cy="80" rx="18" ry="6" fill="rgba(23,33,43,.34)"/>
+   <line class="ray" x1="44" y1="30" x2="150" y2="76" stroke="#f7b733" stroke-width="1.4"/>`,
+  // 6 彩色片投影
+  `${sun(34, 28)}<rect x="96" y="34" width="14" height="34" rx="3" fill="#ff6b6b" opacity=".75"/>
+   <ellipse cx="150" cy="80" rx="18" ry="6" fill="#ff6b6b" opacity=".4"/>
+   <line class="ray" x1="44" y1="30" x2="150" y2="74" stroke="#ff6b6b" stroke-width="1.6" opacity=".7"/>
+   <line class="ray" x1="44" y1="30" x2="150" y2="78" stroke="#1f6feb" stroke-width="1.2" opacity=".5"/>`,
+  // 7 公平比較：兩組相同設置對照
+  `${sun(20, 24)}${obj(48)}<ellipse cx="84" cy="50" rx="13" ry="4.5" fill="rgba(23,33,43,.4)"/>
+   ${sun(120, 24)}${obj(148)}<ellipse cx="184" cy="50" rx="13" ry="4.5" fill="rgba(23,33,43,.4)"/>
+   <line x1="100" y1="14" x2="100" y2="86" stroke="#1f6feb" stroke-width="1.2" stroke-dasharray="4 4" opacity=".6"/>
+   <text x="100" y="92" font-size="9" fill="#1f6feb" text-anchor="middle" font-weight="700">只改一個變因</text>`
+];
+
+window.lessonCases.forEach((item, index) => {
   const card = document.createElement("article");
   card.className = "case-card";
   card.innerHTML = `
     <h3>${item.title}</h3>
-    <div class="case-visual" aria-hidden="true"><span></span></div>
+    <div class="case-visual" aria-hidden="true">
+      <svg viewBox="0 0 200 96" preserveAspectRatio="xMidYMid meet">${caseArt[index] || ""}</svg>
+    </div>
     <p>${item.prompt}</p>
     <button type="button">查看建議</button>
     <div class="case-answer">${item.answer}</div>
@@ -188,7 +237,7 @@ function renderQuiz() {
     question.choices.forEach((choice, choiceIndex) => {
       const button = document.createElement("button");
       button.type = "button";
-      button.textContent = choice;
+      button.innerHTML = `<span class="choice-index">${choiceIndex + 1}.</span><span class="choice-text">${choice}</span>`;
       button.addEventListener("click", () => answerQuestion(index, choiceIndex, card));
       choiceList.append(button);
     });

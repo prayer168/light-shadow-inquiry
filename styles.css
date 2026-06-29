@@ -108,7 +108,6 @@ main {
 
 .hero {
   min-height: min(720px, calc(100vh - 68px));
-  display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(340px, 520px);
   gap: 22px;
   align-items: center;
@@ -513,24 +512,35 @@ output {
 }
 
 .case-visual {
-  height: 86px;
+  height: 96px;
   display: grid;
   place-items: center;
   margin: 8px 0;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #f6f9ff, #eef3fb);
+  border: 1px solid rgba(23, 33, 43, .07);
+  overflow: hidden;
 }
 
-.case-visual span {
-  display: block;
-  width: 74px;
-  height: 34px;
-  border-radius: 50%;
-  background: rgba(23, 33, 43, .32);
-  transition: transform .35s ease, opacity .35s ease;
+.case-visual svg {
+  width: 100%;
+  height: 100%;
 }
 
-.case-card.active .case-visual span {
-  transform: scaleX(1.55) translateX(10px);
-  opacity: .95;
+.case-visual .case-shadow {
+  transition: transform .4s ease, opacity .4s ease;
+  transform-box: fill-box;
+  transform-origin: left center;
+}
+
+.case-card.active .case-visual .case-shadow {
+  transform: scaleX(1.4);
+  opacity: .92;
+}
+
+.case-visual .ray {
+  stroke-dasharray: 4 4;
+  opacity: .8;
 }
 
 .case-answer {
@@ -569,7 +579,19 @@ output {
   cursor: pointer;
   text-align: left;
   padding: 8px 10px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
 }
+
+.choice-list .choice-index {
+  flex: 0 0 auto;
+  font-weight: 900;
+  color: var(--blue);
+}
+
+.choice-list button.correct .choice-index { color: var(--green); }
+.choice-list button.wrong .choice-index { color: var(--coral); }
 
 .choice-list button.correct { border-color: var(--green); background: #edf7ea; }
 .choice-list button.wrong { border-color: var(--coral); background: #fff0ed; }
@@ -850,16 +872,6 @@ output.flash { background: #fff4d6; }
 
 /* Animated light/beam glow in the mini stage */
 .animated-light::after { animation: bulbGlow 2.6s ease-in-out infinite; }
-
-/* Case card light puck glow */
-.case-visual span {
-  background: rgba(23, 33, 43, .3);
-  box-shadow: 0 6px 14px rgba(23, 33, 43, .18);
-}
-
-.case-card.active .case-visual span {
-  background: rgba(23, 33, 43, .5);
-}
 
 /* Quiz progress + feedback animation */
 .quiz-progress {
