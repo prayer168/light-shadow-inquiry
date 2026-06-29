@@ -19,9 +19,18 @@ const dynamicShadow = document.querySelector("#dynamicShadow");
 const dynamicBeam = document.querySelector("#dynamicBeam");
 const objectLabel = document.querySelector("#objectLabel");
 const labReadout = document.querySelector("#labReadout");
+const heightValue = document.querySelector("#heightValue");
+const distanceValue = document.querySelector("#distanceValue");
 
 function currentMaterial() {
   return [...materialControls].find((control) => control.checked).value;
+}
+
+function bump(el) {
+  if (!el) return;
+  el.classList.remove("bump");
+  void el.offsetWidth;
+  el.classList.add("bump");
 }
 
 function updateLab() {
@@ -49,10 +58,21 @@ function updateLab() {
   const sizeText = shadowWidth > 64 ? "影子變大" : shadowWidth < 42 ? "影子變小" : "影子中等大小";
   const angleText = lightY < 165 ? "光源較高，影子位置往下移" : lightY > 285 ? "光源較低，影子被拉長並往上移" : "光源高度接近中間";
   labReadout.textContent = `${sizeText}，${toneMap[material]}。${angleText}。這次請只改變一個變因，才能公平比較。`;
+
+  heightValue.textContent = lightY < 165 ? "高" : lightY > 285 ? "低" : "中";
+  distanceValue.textContent = objectX < 320 ? "近" : objectX > 440 ? "遠" : "中";
 }
 
-[heightControl, distanceControl, ...materialControls].forEach((control) => {
-  control.addEventListener("input", updateLab);
+function flashOutput() {
+  labReadout.classList.remove("flash");
+  void labReadout.offsetWidth;
+  labReadout.classList.add("flash");
+}
+
+heightControl.addEventListener("input", () => { updateLab(); bump(heightValue); flashOutput(); });
+distanceControl.addEventListener("input", () => { updateLab(); bump(distanceValue); flashOutput(); });
+materialControls.forEach((control) => {
+  control.addEventListener("input", () => { updateLab(); flashOutput(); });
 });
 updateLab();
 
@@ -60,6 +80,8 @@ const stepStage = document.querySelector("#stepStage");
 const stepCaption = document.querySelector("#stepCaption");
 const prevStep = document.querySelector("#prevStep");
 const nextStep = document.querySelector("#nextStep");
+const playStep = document.querySelector("#playStep");
+const stepDots = document.querySelector("#stepDots");
 const captions = [
   "第 1 步：先放好光源，確認光照向螢幕。",
   "第 2 步：打開光源，光線沿著直線前進。",
@@ -68,23 +90,53 @@ const captions = [
   "第 5 步：把物體靠近光源，螢幕上的影子會變大。"
 ];
 let step = 1;
+let playTimer = null;
+
+captions.forEach(() => stepDots.append(document.createElement("span")));
+const dots = stepDots.querySelectorAll("span");
 
 function updateStep() {
   stepStage.dataset.step = String(step);
   stepCaption.textContent = captions[step - 1];
   prevStep.disabled = step === 1;
   nextStep.disabled = step === captions.length;
+  dots.forEach((dot, index) => {
+    dot.classList.toggle("done", index < step);
+    dot.classList.toggle("current", index === step - 1);
+  });
+}
+
+function stopPlay() {
+  if (playTimer) clearInterval(playTimer);
+  playTimer = null;
+  playStep.setAttribute("aria-pressed", "false");
+  playStep.textContent = "▶ 自動播放";
 }
 
 prevStep.addEventListener("click", () => {
+  stopPlay();
   step = Math.max(1, step - 1);
   updateStep();
 });
 
 nextStep.addEventListener("click", () => {
+  stopPlay();
   step = Math.min(captions.length, step + 1);
   updateStep();
 });
+
+playStep.addEventListener("click", () => {
+  if (playTimer) { stopPlay(); return; }
+  playStep.setAttribute("aria-pressed", "true");
+  playStep.textContent = "⏸ 暫停";
+  if (step === captions.length) { step = 1; updateStep(); }
+  playTimer = setInterval(() => {
+    if (step >= captions.length) { stopPlay(); return; }
+    step += 1;
+    updateStep();
+  }, 1600);
+});
+
 updateStep();
 
 const caseGrid = document.querySelector("#caseGrid");
@@ -149,8 +201,11 @@ function answerQuestion(index, choiceIndex, card) {
 }
 
 function updateScore() {
+  const total = window.quizQuestions.length;
   const correctCount = [...answered.values()].filter(Boolean).length;
-  quizScore.textContent = `已答 ${answered.size} / ${window.quizQuestions.length}，答對 ${correctCount} 題`;
+  quizScore.textContent = `已答 ${answered.size} / ${total}，答對 ${correctCount} 題`;
+  const bar = document.querySelector("#quizBar");
+  if (bar) bar.style.width = `${(answered.size / total) * 100}%`;
 }
 
 resetQuiz.addEventListener("click", renderQuiz);

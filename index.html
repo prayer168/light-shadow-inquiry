@@ -34,6 +34,10 @@
         </div>
       </div>
       <div class="shadow-stage hero-stage" aria-label="光影實驗示意圖">
+        <div class="dust-layer" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
         <svg viewBox="0 0 760 460" role="img" aria-labelledby="hero-svg-title">
           <title id="hero-svg-title">手電筒照向物體，在螢幕上形成影子</title>
           <defs>
@@ -159,11 +163,11 @@
         </div>
         <form class="control-panel" aria-label="光影模擬控制">
           <label>
-            光源高度
+            <span class="control-label">光源高度 <em id="heightValue" class="control-value">中</em></span>
             <input id="heightControl" type="range" min="80" max="320" value="244">
           </label>
           <label>
-            物體離光源距離
+            <span class="control-label">物體離光源距離 <em id="distanceValue" class="control-value">中</em></span>
             <input id="distanceControl" type="range" min="260" max="500" value="380">
           </label>
           <fieldset>
@@ -191,10 +195,12 @@
           <div class="animated-shadow"></div>
         </div>
         <div class="step-card">
+          <div class="step-dots" id="stepDots" aria-hidden="true"></div>
           <p id="stepCaption">第 1 步：先放好光源，確認光照向螢幕。</p>
           <div class="step-actions">
             <button class="button secondary" id="prevStep" type="button">上一步</button>
             <button class="button primary" id="nextStep" type="button">下一步</button>
+            <button class="button ghost" id="playStep" type="button" aria-pressed="false">▶ 自動播放</button>
           </div>
         </div>
       </div>
@@ -217,6 +223,7 @@
         <span id="quizScore">已答 0 / 10</span>
         <button class="button secondary" id="resetQuiz" type="button">重新作答</button>
       </div>
+      <div class="quiz-progress" aria-hidden="true"><div id="quizBar"></div></div>
       <div id="quizGrid" class="quiz-grid"></div>
     </section>
 
