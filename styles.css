@@ -426,6 +426,7 @@ svg text { fill: var(--muted); font-weight: 900; font-size: 24px; }
 }
 
 .color-stage {
+  --screen-tint: rgba(255, 255, 255, 0);
   position: relative;
   min-height: 260px;
   overflow: hidden;
@@ -438,10 +439,10 @@ svg text { fill: var(--muted); font-weight: 900; font-size: 24px; }
 .color-stage::before {
   content: "";
   position: absolute;
-  inset: 28px 24px 54px;
+  inset: 24px 6% 54px 56%;
   border: 2px solid rgba(129, 161, 176, .55);
   border-radius: 6px;
-  background: #fff;
+  background: linear-gradient(var(--screen-tint), var(--screen-tint)), #fff;
   box-shadow: inset 0 0 38px rgba(255, 255, 255, .72);
   transition: background .35s ease;
 }
@@ -465,7 +466,7 @@ svg text { fill: var(--muted); font-weight: 900; font-size: 24px; }
   font-weight: 900;
 }
 
-.color-stage-label { top: 38px; left: 58px; font-size: .86rem; }
+.color-stage-label { top: 34px; left: 59%; font-size: .86rem; }
 .color-stage-caption { left: 0; right: 0; bottom: 10px; text-align: center; font-size: .86rem; }
 
 .rgb-glow {
@@ -485,7 +486,7 @@ svg text { fill: var(--muted); font-weight: 900; font-size: 24px; }
 .color-shadow-shape {
   position: absolute;
   z-index: 3;
-  left: 50%;
+  left: 40%;
   top: 104px;
   width: 78px;
   height: 142px;
@@ -537,7 +538,7 @@ svg text { fill: var(--muted); font-weight: 900; font-size: 24px; }
   position: absolute;
   z-index: 4;
   left: 50%;
-  top: 62px;
+  top: 58px;
   width: 76px;
   height: 142px;
   fill: #e7a577;
@@ -573,6 +574,9 @@ svg text { fill: var(--muted); font-weight: 900; font-size: 24px; }
 .color-stage.light-green-on.light-blue-on .shadow-red,
 .color-stage.light-red-on.light-blue-on .shadow-green,
 .color-stage.light-red-on.light-green-on .shadow-blue { opacity: 1; }
+.color-stage.light-red-on:not(.light-green-on):not(.light-blue-on) .shadow-black,
+.color-stage.light-green-on:not(.light-red-on):not(.light-blue-on) .shadow-black,
+.color-stage.light-blue-on:not(.light-red-on):not(.light-green-on) .shadow-black { opacity: 1; }
 .color-stage.light-red-on.light-green-on.light-blue-on .hand-shadow { opacity: 1; }
 .color-stage.light-red-on.light-green-on.light-blue-on .shadow-black { opacity: .9; }
 .color-stage:not(.light-red-on):not(.light-green-on):not(.light-blue-on) .shadow-black { opacity: 1; }
