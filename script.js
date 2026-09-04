@@ -89,6 +89,65 @@ materialControls.forEach((control) => {
 });
 updateLab();
 
+const colorStage = document.querySelector("#colorStage");
+const colorShadowShape = document.querySelector("#colorShadowShape");
+const colorStageCaption = document.querySelector("#colorStageCaption");
+const colorReadout = document.querySelector("#colorReadout");
+const blockedColor = document.querySelector("#blockedColor");
+const backgroundColor = document.querySelector("#backgroundColor");
+const colorLights = ["red", "green", "blue"].map((name) => ({
+  name,
+  control: document.querySelector(`#${name}Light`),
+  value: document.querySelector(`#${name}LightValue`)
+}));
+
+const lightColors = { red: [255, 70, 70], green: [65, 205, 125], blue: [70, 135, 255] };
+const backgroundColors = { white: "#f8fbff", red: "#ffdede", green: "#dff6e7", blue: "#dceaff" };
+
+function mixLights(activeLights) {
+  const total = activeLights.reduce((sum, light) => sum + light.level, 0);
+  if (!total) return [39, 50, 61];
+  const channels = activeLights.reduce((sum, light) => {
+    const color = lightColors[light.name];
+    return sum.map((channel, index) => channel + color[index] * light.level);
+  }, [0, 0, 0]);
+  return channels.map((channel) => Math.round(channel / total));
+}
+
+function rgbCss(rgb, alpha = 1) {
+  return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
+}
+
+function updateColorLab() {
+  const lights = colorLights.map(({ name, control, value }) => {
+    const level = Number(control.value);
+    value.textContent = `${level}%`;
+    return { name, level };
+  });
+  const visibleLights = lights.filter((light) => light.level > 0);
+  const blocked = blockedColor.value;
+  const shadowLights = blocked === "none" ? visibleLights : visibleLights.filter((light) => light.name !== blocked);
+  const screenRgb = mixLights(visibleLights);
+  const shadowRgb = mixLights(shadowLights);
+  const activeNames = visibleLights.map((light) => light.name);
+  const shadowName = blocked === "none" ? "部分變暗" : { red: "青色", green: "洋紅色", blue: "黃色" }[blocked];
+  const comboKey = [...activeNames].sort().join(",");
+  const screenNameMap = { "": "暗區", blue: "藍色", green: "綠色", red: "紅色", "blue,green": "青色", "blue,red": "洋紅色", "green,red": "黃色", "blue,green,red": "接近白色" };
+  const screenName = screenNameMap[comboKey] || "混合色";
+  const blockedLabel = blocked === "none" ? "沒有特定色光" : `${blocked === "red" ? "紅" : blocked === "green" ? "綠" : "藍"}光`;
+  colorStage.style.setProperty("--screen-color", rgbCss(screenRgb, .3));
+  colorStage.style.setProperty("--shadow-color", rgbCss(shadowRgb, .82));
+  colorStage.style.setProperty("--background-color", backgroundColors[backgroundColor.value]);
+  colorShadowShape.classList.toggle("soft-shadow", blocked === "none");
+  colorStageCaption.textContent = `屏幕：${screenName}；影子：${shadowName}`;
+  colorReadout.textContent = `${blockedLabel}被擋住時，影子中剩下的光接近${shadowName}。請再調整亮度，觀察顏色與明暗如何改變。`;
+}
+
+colorLights.forEach(({ control }) => control.addEventListener("input", updateColorLab));
+blockedColor.addEventListener("change", updateColorLab);
+backgroundColor.addEventListener("change", updateColorLab);
+updateColorLab();
+
 const stepStage = document.querySelector("#stepStage");
 const stepCaption = document.querySelector("#stepCaption");
 const prevStep = document.querySelector("#prevStep");

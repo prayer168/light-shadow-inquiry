@@ -115,11 +115,12 @@ main {
 }
 
 .hero-copy h1 {
-  max-width: 10em;
+  max-width: none;
   margin: 8px 0 18px;
-  font-size: clamp(2.45rem, 7vw, 5.9rem);
+  font-size: clamp(2.45rem, 6.2vw, 5.25rem);
   line-height: .95;
   letter-spacing: 0;
+  white-space: nowrap;
 }
 
 .hero-copy p {
@@ -204,13 +205,15 @@ main {
   opacity: .86;
 }
 
-.flashlight rect { fill: var(--night); }
-.flashlight path { fill: #2f5169; }
-.flashlight circle { fill: var(--amber); stroke: #fff4c9; stroke-width: 5; filter: drop-shadow(0 0 10px rgba(241, 184, 74, .9)); animation: bulbGlow 2.6s ease-in-out infinite; }
-.screen { fill: url(#screenGradient); stroke: #9fb8c5; stroke-width: 3; }
+.flashlight-body { fill: var(--night); }
+.flashlight-neck { fill: #2f5169; }
+.flashlight-lens { fill: var(--amber); filter: drop-shadow(0 0 10px rgba(241, 184, 74, .9)); animation: bulbGlow 2.6s ease-in-out infinite; }
+.flashlight-ring { fill: none; stroke: #fff4c9; stroke-width: 5; }
+.screen rect { fill: url(#screenGradient); stroke: #9fb8c5; stroke-width: 3; }
+.screen path { fill: #8da5b0; stroke: #78909b; stroke-width: 2; }
 .cast-shadow { fill: rgba(23, 33, 43, .62); }
-.object-shape rect { fill: var(--coral); }
-.object-shape circle { fill: var(--teal); }
+.object-shape path:first-child { fill: var(--coral); }
+.object-notch { fill: #f7c76b; opacity: .9; }
 
 #dynamicShadow,
 #dynamicObject,
@@ -404,6 +407,136 @@ svg text { fill: var(--muted); font-weight: 900; font-size: 24px; }
   color: var(--muted);
   font-weight: 700;
 }
+
+.color-shadow-module {
+  margin-top: 28px;
+  border-top: 1px solid var(--line);
+  padding-top: 28px;
+}
+
+.compact-heading { margin-bottom: 18px; }
+.compact-heading h3 { margin: 6px 0 8px; font-size: clamp(1.45rem, 3vw, 2.15rem); }
+.compact-heading p:last-child { max-width: 780px; }
+
+.color-shadow-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 16px;
+  align-items: stretch;
+}
+
+.color-stage {
+  --screen-color: rgba(255, 255, 255, .3);
+  --shadow-color: rgba(39, 50, 61, .82);
+  --background-color: #f8fbff;
+  position: relative;
+  min-height: 320px;
+  overflow: hidden;
+  border: 1px solid #c4d9e1;
+  border-radius: 8px;
+  background: var(--background-color);
+  isolation: isolate;
+}
+
+.color-stage::before {
+  content: "";
+  position: absolute;
+  inset: 28px 24px 54px;
+  border: 2px solid rgba(129, 161, 176, .55);
+  border-radius: 6px;
+  background: var(--screen-color);
+  box-shadow: inset 0 0 38px rgba(255, 255, 255, .72);
+  transition: background .35s ease;
+}
+
+.color-stage::after {
+  content: "";
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: 34px;
+  height: 4px;
+  border-radius: 99px;
+  background: #8da5b0;
+}
+
+.color-stage-label,
+.color-stage-caption {
+  position: absolute;
+  z-index: 4;
+  color: var(--night);
+  font-weight: 900;
+}
+
+.color-stage-label { top: 40px; left: 42px; font-size: .86rem; }
+.color-stage-caption { left: 0; right: 0; bottom: 10px; text-align: center; font-size: .86rem; }
+
+.rgb-glow {
+  position: absolute;
+  z-index: 2;
+  width: 116px;
+  height: 116px;
+  border-radius: 50%;
+  opacity: .72;
+  filter: blur(14px);
+  transition: opacity .3s ease;
+}
+
+.red-glow { left: 20%; top: 34%; background: #ff4747; }
+.green-glow { left: 39%; top: 23%; background: #41cd7d; }
+.blue-glow { left: 58%; top: 34%; background: #4687ff; }
+.color-shadow-shape {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  top: 104px;
+  width: 78px;
+  height: 142px;
+  transform: translateX(-50%);
+  clip-path: polygon(18% 15%, 36% 0, 64% 0, 82% 15%, 82% 100%, 18% 100%);
+  background: var(--shadow-color);
+  box-shadow: 0 8px 20px rgba(23, 33, 43, .2);
+  transition: background .35s ease, filter .35s ease;
+}
+
+.color-shadow-shape.soft-shadow { filter: blur(8px); }
+
+.color-controls {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.color-controls fieldset { display: grid; gap: 12px; border: 0; padding: 0; }
+.color-controls legend { margin-bottom: 2px; color: var(--night); font-weight: 900; }
+.color-control { display: grid; gap: 6px; font-weight: 800; }
+.color-control span { display: flex; justify-content: space-between; color: var(--muted); }
+.color-control output { min-height: auto; padding: 0; background: transparent; color: inherit; font: inherit; }
+.color-control input { width: 100%; }
+.red-control input { accent-color: #e54b4b; }
+.green-control input { accent-color: #2caa68; }
+.blue-control input { accent-color: #407be8; }
+.select-control { display: grid; gap: 6px; color: var(--night); font-weight: 900; }
+.select-control select { min-height: 40px; border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; color: var(--night); background: #fff; font: inherit; }
+.color-readout { min-height: auto; padding: 12px; font-size: .92rem; }
+
+.color-shadow-notes {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  gap: 18px;
+  margin-top: 18px;
+  align-items: start;
+}
+
+.color-shadow-notes > div { padding: 14px 16px; border-left: 4px solid var(--amber); background: #fffaf0; }
+.color-shadow-notes p { margin: 6px 0 0; color: var(--muted); line-height: 1.7; }
+.color-shadow-notes figure { margin: 0; }
+.color-shadow-notes img { display: block; width: 100%; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
+.color-shadow-notes figcaption { margin-top: 6px; color: var(--muted); font-size: .8rem; text-align: center; }
 
 output {
   display: block;
@@ -683,7 +816,8 @@ output {
 @media (max-width: 920px) {
   .hero,
   .lab-layout,
-  .animation-layout {
+  .animation-layout,
+  .color-shadow-grid {
     grid-template-columns: 1fr;
   }
 
@@ -698,7 +832,10 @@ output {
 @media (max-width: 620px) {
   main { width: min(100% - 24px, 1180px); }
   .site-header { align-items: flex-start; flex-direction: column; gap: 8px; }
-  .hero-copy h1 { font-size: clamp(2.3rem, 14vw, 4rem); }
+  .hero-copy h1 {
+    font-size: clamp(2.3rem, 14vw, 4rem);
+    white-space: normal;
+  }
   .concept-grid,
   .case-grid,
   .quiz-grid,
@@ -707,6 +844,8 @@ output {
     grid-template-columns: 1fr;
   }
   .mini-stage { min-height: 340px; }
+  .color-shadow-notes { grid-template-columns: 1fr; }
+  .color-stage { min-height: 280px; }
 }
 
 /* ---- Interactive polish ---- */
