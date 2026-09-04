@@ -158,29 +158,34 @@
           <p>影子不是塗上的黑色；某一種色光被擋住後，其他還能照到的光會決定影子的顏色。這是概念模擬，實際顏色會受燈具與環境光影響。</p>
         </div>
         <div class="color-shadow-grid">
-          <div class="color-stage" id="colorStage" aria-label="三色光彩色影子模擬">
+          <div class="color-stage" id="colorStage" aria-label="三色光照射手部並在白色屏幕形成彩色影子的模擬">
             <div class="color-stage-label">白色屏幕</div>
-            <div class="rgb-glow red-glow" aria-hidden="true"></div>
-            <div class="rgb-glow green-glow" aria-hidden="true"></div>
-            <div class="rgb-glow blue-glow" aria-hidden="true"></div>
-            <div class="color-shadow-shape" id="colorShadowShape" aria-hidden="true"></div>
+            <div class="color-lamp red-lamp"><span>紅光</span></div>
+            <div class="color-lamp green-lamp"><span>綠光</span></div>
+            <div class="color-lamp blue-lamp"><span>藍光</span></div>
+            <div class="hand-object" aria-label="手部遮擋物">✋</div>
+            <div class="hand-shadow shadow-red" aria-hidden="true"></div>
+            <div class="hand-shadow shadow-green" aria-hidden="true"></div>
+            <div class="hand-shadow shadow-blue" aria-hidden="true"></div>
+            <div class="hand-shadow shadow-black" aria-hidden="true"></div>
             <div class="color-stage-caption" id="colorStageCaption">三色光重疊，屏幕接近白色</div>
           </div>
           <form class="color-controls" aria-label="彩色影子實驗控制">
             <fieldset>
-              <legend>三色燈亮度</legend>
-              <label class="color-control red-control"><span>紅光 <output id="redLightValue">100%</output></span><input id="redLight" type="range" min="0" max="100" value="100"></label>
-              <label class="color-control green-control"><span>綠光 <output id="greenLightValue">100%</output></span><input id="greenLight" type="range" min="0" max="100" value="100"></label>
-              <label class="color-control blue-control"><span>藍光 <output id="blueLightValue">100%</output></span><input id="blueLight" type="range" min="0" max="100" value="100"></label>
+              <legend>三色燈</legend>
+              <div class="preset-row" role="group" aria-label="常見色光組合">
+                <button type="button" class="button ghost color-preset" data-lights="red">單獨紅光</button>
+                <button type="button" class="button ghost color-preset" data-lights="green">單獨綠光</button>
+                <button type="button" class="button ghost color-preset" data-lights="blue">單獨藍光</button>
+                <button type="button" class="button ghost color-preset" data-lights="red,green,blue">三色全開</button>
+              </div>
+              <label class="light-toggle red-toggle"><input id="redLightOn" type="checkbox" checked><span>紅光開</span></label>
+              <label class="light-toggle green-toggle"><input id="greenLightOn" type="checkbox" checked><span>綠光開</span></label>
+              <label class="light-toggle blue-toggle"><input id="blueLightOn" type="checkbox" checked><span>藍光開</span></label>
+              <label class="color-control red-control"><span>紅光亮度 <output id="redLightValue">100%</output></span><input id="redLight" type="range" min="0" max="100" value="100"></label>
+              <label class="color-control green-control"><span>綠光亮度 <output id="greenLightValue">100%</output></span><input id="greenLight" type="range" min="0" max="100" value="100"></label>
+              <label class="color-control blue-control"><span>藍光亮度 <output id="blueLightValue">100%</output></span><input id="blueLight" type="range" min="0" max="100" value="100"></label>
             </fieldset>
-            <label class="select-control">被物體擋住的色光
-              <select id="blockedColor">
-                <option value="red">紅光</option>
-                <option value="green">綠光</option>
-                <option value="blue">藍光</option>
-                <option value="none">沒有特定色光</option>
-              </select>
-            </label>
             <label class="select-control">屏幕背景
               <select id="backgroundColor">
                 <option value="white">白色</option>
@@ -189,7 +194,7 @@
                 <option value="blue">藍色</option>
               </select>
             </label>
-            <output class="color-readout" id="colorReadout">紅光被擋住時，綠光＋藍光混合成青色。</output>
+            <output class="color-readout" id="colorReadout">三色光同時照射，手部周圍會出現紅、綠、藍光造成的彩色影子。</output>
           </form>
         </div>
         <div class="color-shadow-notes">
