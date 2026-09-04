@@ -92,7 +92,6 @@ updateLab();
 const colorStage = document.querySelector("#colorStage");
 const colorStageCaption = document.querySelector("#colorStageCaption");
 const colorReadout = document.querySelector("#colorReadout");
-const backgroundColor = document.querySelector("#backgroundColor");
 const colorLights = ["red", "green", "blue"].map((name) => ({
   name,
   control: document.querySelector(`#${name}Light`),
@@ -101,7 +100,6 @@ const colorLights = ["red", "green", "blue"].map((name) => ({
 }));
 
 const lightColors = { red: [255, 0, 0], green: [0, 255, 0], blue: [0, 0, 255] };
-const backgroundColors = { white: "#f8fbff", red: "#ffdede", green: "#dff6e7", blue: "#dceaff" };
 
 function mixLights(activeLights) {
   const channels = activeLights.reduce((sum, light) => {
@@ -127,8 +125,6 @@ function updateColorLab() {
   const comboKey = [...activeNames].sort().join(",");
   const screenNameMap = { "": "暗區", blue: "藍色", green: "綠色", red: "紅色", "blue,green": "青色", "blue,red": "洋紅色", "green,red": "黃色", "blue,green,red": "接近白色" };
   const screenName = screenNameMap[comboKey] || "混合色";
-  colorStage.style.setProperty("--screen-color", rgbCss(screenRgb, .3));
-  colorStage.style.setProperty("--background-color", backgroundColors[backgroundColor.value]);
   ["red", "green", "blue"].forEach((name) => colorStage.classList.toggle(`light-${name}-on`, activeNames.includes(name)));
   colorStageCaption.textContent = `屏幕照明：${screenName}；手部遮擋會形成彩色影子`;
   const explanation = { "": "三色燈都關閉，屏幕變暗。", red: "單獨紅光照射時，屏幕呈紅色，手部影子接近暗色。", green: "單獨綠光照射時，屏幕呈綠色，手部影子接近暗色。", blue: "單獨藍光照射時，屏幕呈藍色，手部影子接近暗色。", "blue,green": "紅光沒有照到影子區，剩下綠光＋藍光，形成青色影子。", "blue,red": "綠光沒有照到影子區，剩下紅光＋藍光，形成洋紅色影子。", "green,red": "藍光沒有照到影子區，剩下紅光＋綠光，形成黃色影子。", "blue,green,red": "三色光都照射時，分別遮住不同色光會出現青、洋紅、黃影子，三色都被擋住的重疊處最暗。" };
@@ -139,7 +135,6 @@ colorLights.forEach(({ control, toggle }) => {
   control.addEventListener("input", updateColorLab);
   toggle.addEventListener("change", updateColorLab);
 });
-backgroundColor.addEventListener("change", updateColorLab);
 document.querySelectorAll(".color-preset").forEach((button) => button.addEventListener("click", () => {
   const selected = button.dataset.lights.split(",");
   colorLights.forEach(({ name, toggle }) => { toggle.checked = selected.includes(name); });
