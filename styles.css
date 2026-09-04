@@ -548,6 +548,14 @@ svg text { fill: var(--muted); font-weight: 900; font-size: 24px; }
   transform: translateX(-50%) rotate(-7deg);
 }
 
+.color-stage svg.hand-object,
+.color-stage svg.hand-shadow {
+  display: block;
+  width: 76px;
+  height: 142px;
+  max-width: none;
+}
+
 .hand-shadow {
   position: absolute;
   z-index: 2;
